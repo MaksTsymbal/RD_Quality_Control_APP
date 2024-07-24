@@ -13,3 +13,7 @@ Here are some possibilities and functionality that are planned to be added:
 * View the complete list of received goods in tabular form
 
 At the moment, this is the basic functionality, all refinements will be indicated in the course of work.
+
+### Basic structure of project:
+
+![1721819860124](image/README/1721819860124.png)
