@@ -1,20 +1,15 @@
-<<<<<<< HEAD
-# check_point
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-=======
 # RD_Quality_Control_APP
->>>>>>> 5cb23de0514719cf5ef2108f2387a5e940640c99
+
+### Description of the project
+
+For the course project, I chose the topic "Application for keeping warehouse records and product quality assessment."
+It will include product acceptance, product quality assessment, filling in the product nomenclature, and delivery accounting documents.
+
+Here are some possibilities and functionality that are planned to be added:
+
+* The ability to manage the process of obtaining goods in the warehouse "from and to"
+* Uploading a photo of invoices
+* Entering a delivery checklist
+* View the complete list of received goods in tabular form
+
+At the moment, this is the basic functionality, all refinements will be indicated in the course of work.
