@@ -20,4 +20,4 @@ At the moment, this is the basic functionality, all refinements will be indicate
 
 # Current view of first page
 
-![1721819860124](https://file+.vscode-resource.vscode-cdn.net/Users/maksim/projects/CheckPoint/check_point/image/README/123.png)
+![1721819860124](image/README/123.png)
