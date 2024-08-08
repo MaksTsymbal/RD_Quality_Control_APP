@@ -17,3 +17,7 @@ At the moment, this is the basic functionality, all refinements will be indicate
 ### Basic structure of project:
 
 ![1721819860124](image/README/1721819860124.png)
+
+# Current view of first page
+
+![1721819860124](image/README/123.png)
