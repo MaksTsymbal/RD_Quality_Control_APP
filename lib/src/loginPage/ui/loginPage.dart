@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/gestures.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,14 +12,12 @@ class _LoginPageState extends State<LoginPage> {
   bool _isPasswordHidden = true;
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  List<dynamic> _userData = [];
 
-  @override
+   @override
   void initState() {
     super.initState();
     _loginController.addListener(_updateButtonState);
     _passwordController.addListener(_updateButtonState);
-    _loadUserData();
   }
 
   @override
@@ -34,29 +31,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void _updateButtonState() {
     setState(() {});
-  }
-
-  Future<void> _loadUserData() async {
-    final String response = await rootBundle.loadString('lib/src/loginPage/data/test_auth.json');
-    final List<dynamic> data = json.decode(response);
-    setState(() {
-      _userData = data;
-    });
-  }
-
-  void _login() {
-    final String login = _loginController.text;
-    final String password = _passwordController.text;
-
-    for (var user in _userData) {
-      if (user['login'] == login && user['password'] == password) {
-        Navigator.popAndPushNamed(context, 'main', arguments: user['name']);
-        return;
-      }
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Невірний логін або пароль')),
-    );
   }
 
   @override
@@ -90,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextField(
                     controller: _loginController,
                     decoration: InputDecoration(
+
                       prefixIcon: const Icon(
                         Icons.person_outline,
                         color: Colors.black,
@@ -108,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                     cursorColor: Colors.white,
                   ),
                 ),
+                // const SizedBox(height: 5),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   child: TextField(
@@ -158,16 +134,19 @@ class _LoginPageState extends State<LoginPage> {
               children: [ 
                 RichText(
                   textAlign: TextAlign.center,
-                  text: const TextSpan(
+                  text: TextSpan(
                     text: 'Погоджуюсь з\n',
-                    style: TextStyle(color: Colors.black, fontFamily: 'Futura'),
+                    style: const TextStyle(color: Colors.black, fontFamily: 'Futura'),
                     children: [
                       TextSpan(
                         text: 'Правилами збору та обробки персональних даних',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           decoration: TextDecoration.underline,
                         ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                          },
                       ),
                     ],
                   ),
@@ -176,7 +155,9 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: isButtonEnabled ? _login : null,
+                    onPressed: isButtonEnabled ? () {
+                      print('tap');
+                    } : null,
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       backgroundColor: isButtonEnabled ? Colors.orange : Colors.transparent,
