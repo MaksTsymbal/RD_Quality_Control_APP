@@ -1,3 +1,4 @@
+
 # RD_Quality_Control_APP
 
 ### Description of the project
@@ -21,3 +22,7 @@ At the moment, this is the basic functionality, all refinements will be indicate
 # Current view of first page
 
 ![1721819860124](image/README/123.png)
+
+![123](image/README/main.png)
+
+![1721819860124](image/README/createdoc.png)
