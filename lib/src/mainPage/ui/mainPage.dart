@@ -21,13 +21,15 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<void> _loadData() async {
-    final String response = await rootBundle.loadString('lib/src/mainPage/data/test_info.json');
+    final String response =
+        await rootBundle.loadString('lib/src/mainPage/data/test_info.json');
     final List<dynamic> dataList = json.decode(response);
     setState(() {
       _data = dataList.map((item) {
         return {
           "date": item['date'],
           "FOP": item['FOP'],
+          "status": item['status'],
         };
       }).toList();
     });
@@ -39,13 +41,15 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: const Color.fromARGB(255, 255, 235, 208),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 235, 208),
-        title: Text('Вітаю, ${widget.name}', style: const TextStyle(color: Colors.black, fontFamily: 'Futura', fontSize: 30)),
+        title: Text('Вітаю, ${widget.name}',
+            style: const TextStyle(
+                color: Colors.black, fontFamily: 'Futura', fontSize: 30)),
       ),
       body: Stack(
         children: [
           _data.isEmpty
               ? const Center(child: CircularProgressIndicator())
-              : Padding (
+              : Padding(
                   padding: const EdgeInsets.only(bottom: 120.0),
                   child: SingleChildScrollView(
                     child: Column(
@@ -53,7 +57,8 @@ class _MainPageState extends State<MainPage> {
                         Container(
                           alignment: Alignment.center,
                           width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsets.only(bottom: 0.0, left: 0.0, right: 0.0),
+                          padding: const EdgeInsets.only(
+                              bottom: 0.0, left: 0.0, right: 0.0),
                           child: DataTable(
                             columnSpacing: 31,
                             dividerThickness: 2,
@@ -79,6 +84,9 @@ class _MainPageState extends State<MainPage> {
                             ],
                             rows: _data.map((item) {
                               return DataRow(
+                                color: item['status'] != true
+                                    ? MaterialStateProperty.all(Colors.transparent)
+                                    : MaterialStateProperty.all(Colors.orange),
                                 cells: [
                                   DataCell(Center(
                                       child: Text(item['date'] as String,
@@ -100,7 +108,7 @@ class _MainPageState extends State<MainPage> {
                       ],
                     ),
                   ),
-              ),
+                ),
           Positioned(
             bottom: 20,
             left: 50,
@@ -111,7 +119,9 @@ class _MainPageState extends State<MainPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: null,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/create_document');
+                    },
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       backgroundColor: Colors.orange,
