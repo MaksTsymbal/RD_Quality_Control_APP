@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import '../widgets/customSwitcher.dart';
-import '../widgets/customDropdown.dart';
+import 'package:check_point/src/createDocumentPage/widgets/custom_switcher.dart';
+import 'package:check_point/src/createDocumentPage/widgets/custom_dropdown.dart';
+
 class CreateQualityControllResultPage extends StatefulWidget {
   const CreateQualityControllResultPage({super.key});
 

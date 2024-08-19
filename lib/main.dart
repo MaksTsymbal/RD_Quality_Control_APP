@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'src/loginPage/ui/loginPage.dart';
-import 'src/mainPage/ui/mainPage.dart';
-import 'src/createDocumentPage/ui/createDocumentPage.dart';
+import 'package:check_point/src/loginPage/ui/login_page.dart';
+import 'package:check_point/src/mainPage/ui/main_page.dart';
+import 'package:check_point/src/createDocumentPage/ui/create_document_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
-        '/create_document': (context) => const CreateQualityControllResultPage(),
+        '/create_document': (context) =>
+            const CreateQualityControllResultPage(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == 'main') {
@@ -32,9 +33,7 @@ class MyApp extends StatelessWidget {
         return null;
       },
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
     );

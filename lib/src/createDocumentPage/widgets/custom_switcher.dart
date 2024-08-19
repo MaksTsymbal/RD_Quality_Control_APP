@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomSwitch extends StatefulWidget {
-  const CustomSwitch({Key? key}) : super(key: key);
+  const CustomSwitch({super.key});
 
   @override
   State<CustomSwitch> createState() => _CustomSwitchState();
@@ -37,7 +37,8 @@ class _CustomSwitchState extends State<CustomSwitch> {
                   left: selectedIndex * buttonWidth,
                   top: 0,
                   bottom: 0,
-                  right: switchWidth - selectedIndex * buttonWidth - buttonWidth,
+                  right:
+                      switchWidth - selectedIndex * buttonWidth - buttonWidth,
                   child: Container(
                     width: buttonWidth,
                     decoration: BoxDecoration(

@@ -85,8 +85,9 @@ class _MainPageState extends State<MainPage> {
                             rows: _data.map((item) {
                               return DataRow(
                                 color: item['status'] != true
-                                    ? MaterialStateProperty.all(Colors.transparent)
-                                    : MaterialStateProperty.all(Colors.orange),
+                                    ? WidgetStateProperty.all(
+                                        Colors.transparent)
+                                    : WidgetStateProperty.all(Colors.orange),
                                 cells: [
                                   DataCell(Center(
                                       child: Text(item['date'] as String,
