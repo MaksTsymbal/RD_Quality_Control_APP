@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:check_point/src/mainPage/data/info_model.dart';
+import 'package:check_point/src/mainPage/data/inherited_widget.dart';
+import 'package:check_point/src/userInfo/ui/user_info_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key, required this.name});
@@ -12,7 +15,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  List<Map<String, dynamic>> _data = [];
+  List<InfoModel> _data = [];
 
   @override
   void initState() {
@@ -25,13 +28,9 @@ class _MainPageState extends State<MainPage> {
         await rootBundle.loadString('lib/src/mainPage/data/test_info.json');
     final List<dynamic> dataList = json.decode(response);
     setState(() {
-      _data = dataList.map((item) {
-        return {
-          "date": item['date'],
-          "FOP": item['FOP'],
-          "status": item['status'],
-        };
-      }).toList();
+      _data = dataList
+          .map((item) => InfoModel.fromJson(item as Map<String, dynamic>))
+          .toList();
     });
   }
 
@@ -41,9 +40,39 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: const Color.fromARGB(255, 255, 235, 208),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 235, 208),
-        title: Text('Вітаю, ${widget.name}',
-            style: const TextStyle(
-                color: Colors.black, fontFamily: 'Futura', fontSize: 30)),
+        title: Row(
+          children: [
+            const Spacer(flex: 4),
+            Text(
+              'Вітаю, ${widget.name}',
+              style: const TextStyle(
+                color: Colors.black,
+                fontFamily: 'Futura',
+                fontSize: 30,
+              ),
+            ),
+            const Spacer(flex: 2),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UserInheritedWidget(
+                      name: widget.name,
+                      data: _data,
+                      child: const UserPage(),
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.person_outline,
+                size: 35,
+              ),
+              color: Colors.black,
+            ),
+            const SizedBox(width: 2),
+          ],
+        ),
       ),
       body: Stack(
         children: [
@@ -84,19 +113,19 @@ class _MainPageState extends State<MainPage> {
                             ],
                             rows: _data.map((item) {
                               return DataRow(
-                                color: item['status'] != true
+                                color: item.status != true
                                     ? WidgetStateProperty.all(
                                         Colors.transparent)
                                     : WidgetStateProperty.all(Colors.orange),
                                 cells: [
                                   DataCell(Center(
-                                      child: Text(item['date'] as String,
+                                      child: Text(item.date,
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontFamily: 'Futura',
                                               fontSize: 20)))),
                                   DataCell(Center(
-                                      child: Text(item['FOP'] as String,
+                                      child: Text(item.fop,
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontFamily: 'Futura',
@@ -145,7 +174,7 @@ class _MainPageState extends State<MainPage> {
                 RichText(
                   textAlign: TextAlign.center,
                   text: const TextSpan(
-                    text: 'Версія: 1.0.0',
+                    text: 'Версія: 1.0.1',
                     style: TextStyle(color: Colors.black, fontFamily: 'Futura'),
                   ),
                 ),

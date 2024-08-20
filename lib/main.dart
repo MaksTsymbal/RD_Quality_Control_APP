@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:check_point/src/loginPage/ui/login_page.dart';
 import 'package:check_point/src/mainPage/ui/main_page.dart';
 import 'package:check_point/src/createDocumentPage/ui/create_document_page.dart';
+import 'package:check_point/src/userInfo/ui/user_info_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/create_document': (context) =>
             const CreateQualityControllResultPage(),
+        '/user_page': (context) => const UserPage(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == 'main') {

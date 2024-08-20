@@ -12,6 +12,9 @@ class CreateQualityControllResultPage extends StatefulWidget {
 
 class _CreateQualityControllResultPageState
     extends State<CreateQualityControllResultPage> {
+  bool isSupplierApprovedSelected = false;
+  bool isTemperatureMeasuredSelected = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +54,97 @@ class _CreateQualityControllResultPageState
             const SizedBox(height: 20),
             CustomDropdown(
               labelText: 'Постачальник',
+              items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
+              onChanged: (value) {
+                print(value);
+              },
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 26.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Постачальник схвалений',
+                          style: TextStyle(fontSize: 16)),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isSupplierApprovedSelected = !isSupplierApprovedSelected;
+                          });
+                        },
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Colors.transparent,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isSupplierApprovedSelected ? Colors.red : Colors.black,
+                                width: 2,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: CircleAvatar(
+                                radius: 8,
+                                backgroundColor: isSupplierApprovedSelected
+                                    ? Colors.red
+                                    : Colors.transparent,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Температуру виміряно',
+                          style: TextStyle(fontSize: 16)),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isTemperatureMeasuredSelected = !isTemperatureMeasuredSelected;
+                          });
+                        },
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Colors.transparent,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isTemperatureMeasuredSelected
+                                    ? Colors.red
+                                    : Colors.black,
+                                width: 2,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: CircleAvatar(
+                                radius: 8,
+                                backgroundColor: isTemperatureMeasuredSelected
+                                    ? Colors.red
+                                    : Colors.transparent,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 30),
+            CustomDropdown(
+              labelText: 'Стан транспортного засобу',
               items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
               onChanged: (value) {
                 print(value);
