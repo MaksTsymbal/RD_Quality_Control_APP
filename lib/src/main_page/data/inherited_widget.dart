@@ -10,9 +10,17 @@ class MyInheritedWidget extends InheritedWidget {
   final bool isSupplierApprovedSelected;
   final bool isTemperatureMeasuredSelected;
   final String? selectedVehicleCondition;
+  final Function({
+    String? selectedWarehouse,
+    String? selectedDate,
+    String? selectedSupplier,
+    bool? isSupplierApprovedSelected,
+    bool? isTemperatureMeasuredSelected,
+    String? selectedVehicleCondition,
+  }) updateState;
 
   const MyInheritedWidget({
-    super.key,
+    Key? key,
     required this.name,
     required this.data,
     this.selectedWarehouse,
@@ -21,53 +29,29 @@ class MyInheritedWidget extends InheritedWidget {
     this.isSupplierApprovedSelected = false,
     this.isTemperatureMeasuredSelected = false,
     this.selectedVehicleCondition,
-    required super.child,
-  });
+    required this.updateState,
+    required Widget child,
+  }) : super(key: key, child: child);
 
   static MyInheritedWidget? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
   }
 
   static MyInheritedWidget of(BuildContext context) {
-    final MyInheritedWidget? result = maybeOf(context);
+    final MyInheritedWidget? result =
+        context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
     assert(result != null, 'No MyInheritedWidget found in context');
     return result!;
-  }
-
-  static void update(BuildContext context, {
-    String? selectedWarehouse,
-    String? selectedDate,
-    String? selectedSupplier,
-    bool? isSupplierApprovedSelected,
-    bool? isTemperatureMeasuredSelected,
-    String? selectedVehicleCondition,
-  }) {
-    final widget = MyInheritedWidget.of(context);
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => MyInheritedWidget(
-          name: widget.name,
-          data: widget.data,
-          selectedWarehouse: selectedWarehouse ?? widget.selectedWarehouse,
-          selectedDate: selectedDate ?? widget.selectedDate,
-          selectedSupplier: selectedSupplier ?? widget.selectedSupplier,
-          isSupplierApprovedSelected: isSupplierApprovedSelected ?? widget.isSupplierApprovedSelected,
-          isTemperatureMeasuredSelected: isTemperatureMeasuredSelected ?? widget.isTemperatureMeasuredSelected,
-          selectedVehicleCondition: selectedVehicleCondition ?? widget.selectedVehicleCondition,
-          child: widget.child,
-        ),
-      ),
-    );
   }
 
   @override
   bool updateShouldNotify(MyInheritedWidget oldWidget) {
     return selectedWarehouse != oldWidget.selectedWarehouse ||
-           selectedDate != oldWidget.selectedDate ||
-           selectedSupplier != oldWidget.selectedSupplier ||
-           isSupplierApprovedSelected != oldWidget.isSupplierApprovedSelected ||
-           isTemperatureMeasuredSelected != oldWidget.isTemperatureMeasuredSelected ||
-           selectedVehicleCondition != oldWidget.selectedVehicleCondition;
+        selectedDate != oldWidget.selectedDate ||
+        selectedSupplier != oldWidget.selectedSupplier ||
+        isSupplierApprovedSelected != oldWidget.isSupplierApprovedSelected ||
+        isTemperatureMeasuredSelected !=
+            oldWidget.isTemperatureMeasuredSelected ||
+        selectedVehicleCondition != oldWidget.selectedVehicleCondition;
   }
 }

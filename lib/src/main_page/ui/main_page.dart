@@ -17,6 +17,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   List<InfoModel> _data = [];
+  String? _selectedWarehouse;
+  String? _selectedDate;
+  String? _selectedSupplier;
+  bool _isSupplierApprovedSelected = false;
+  bool _isTemperatureMeasuredSelected = false;
+  String? _selectedVehicleCondition;
 
   @override
   void initState() {
@@ -35,162 +41,196 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  void updateState({
+    String? selectedWarehouse,
+    String? selectedDate,
+    String? selectedSupplier,
+    bool? isSupplierApprovedSelected,
+    bool? isTemperatureMeasuredSelected,
+    String? selectedVehicleCondition,
+  }) {
+    setState(() {
+      if (selectedWarehouse != null) _selectedWarehouse = selectedWarehouse;
+      if (selectedDate != null) _selectedDate = selectedDate;
+      if (selectedSupplier != null) _selectedSupplier = selectedSupplier;
+      if (isSupplierApprovedSelected != null)
+        _isSupplierApprovedSelected = isSupplierApprovedSelected;
+      if (isTemperatureMeasuredSelected != null)
+        _isTemperatureMeasuredSelected = isTemperatureMeasuredSelected;
+      if (selectedVehicleCondition != null)
+        _selectedVehicleCondition = selectedVehicleCondition;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 235, 208),
-      appBar: AppBar(
+    return MyInheritedWidget(
+      name: widget.name,
+      data: _data,
+      selectedWarehouse: _selectedWarehouse,
+      selectedDate: _selectedDate,
+      selectedSupplier: _selectedSupplier,
+      isSupplierApprovedSelected: _isSupplierApprovedSelected,
+      isTemperatureMeasuredSelected: _isTemperatureMeasuredSelected,
+      selectedVehicleCondition: _selectedVehicleCondition,
+      updateState: updateState,
+      child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 235, 208),
-        title: Row(
-          children: [
-            const Spacer(flex: 4),
-            Text(
-              'Вітаю, ${widget.name}',
-              style: const TextStyle(
-                color: Colors.black,
-                fontFamily: 'Futura',
-                fontSize: 30,
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 255, 235, 208),
+          title: Row(
+            children: [
+              const Spacer(flex: 4),
+              Text(
+                'Вітаю, ${widget.name}',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Futura',
+                  fontSize: 30,
+                ),
               ),
-            ),
-            const Spacer(flex: 2),
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => MyInheritedWidget(
-                      name: widget.name,
-                      data: _data,
-                      child: const UserPage(),
+              const Spacer(flex: 2),
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => MyInheritedWidget(
+                        name: widget.name,
+                        data: _data,
+                        updateState: updateState,
+                        child: const UserPage(),
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.person_outline,
+                  size: 35,
+                ),
+                color: Colors.black,
+              ),
+              const SizedBox(width: 2),
+            ],
+          ),
+        ),
+        body: Stack(
+          children: [
+            _data.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.only(bottom: 120.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.only(
+                                bottom: 0.0, left: 0.0, right: 0.0),
+                            child: DataTable(
+                              columnSpacing: 31,
+                              dividerThickness: 2,
+                              border: TableBorder.all(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                              columns: const [
+                                DataColumn(
+                                    label: Center(
+                                        child: Text('Дата',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'Futura',
+                                                fontSize: 24)))),
+                                DataColumn(
+                                    label: Center(
+                                        child: Text('ФОП',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'Futura',
+                                                fontSize: 24)))),
+                              ],
+                              rows: _data.map((item) {
+                                return DataRow(
+                                  color: item.status != true
+                                      ? WidgetStateProperty.all(
+                                          Colors.transparent)
+                                      : WidgetStateProperty.all(Colors.orange),
+                                  cells: [
+                                    DataCell(Center(
+                                        child: Text(item.date,
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'Futura',
+                                                fontSize: 20)))),
+                                    DataCell(Center(
+                                        child: Text(item.fop,
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'Futura',
+                                                fontSize: 18)))),
+                                  ],
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                );
-              },
-              icon: const Icon(
-                Icons.person_outline,
-                size: 35,
+            Positioned(
+              bottom: 20,
+              left: 50,
+              right: 50,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                CreateQualityControllResultPage(
+                              name: widget.name,
+                              data: _data,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: Colors.orange,
+                        disabledBackgroundColor: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      ),
+                      child: const Text(
+                        'Створити',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: const TextSpan(
+                      text: 'Версія: 1.0.1',
+                      style:
+                          TextStyle(color: Colors.black, fontFamily: 'Futura'),
+                    ),
+                  ),
+                ],
               ),
-              color: Colors.black,
             ),
-            const SizedBox(width: 2),
           ],
         ),
-      ),
-      body: Stack(
-        children: [
-          _data.isEmpty
-              ? const Center(child: CircularProgressIndicator())
-              : Padding(
-                  padding: const EdgeInsets.only(bottom: 120.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsets.only(
-                              bottom: 0.0, left: 0.0, right: 0.0),
-                          child: DataTable(
-                            columnSpacing: 31,
-                            dividerThickness: 2,
-                            border: TableBorder.all(
-                              color: Colors.black,
-                              width: 1,
-                            ),
-                            columns: const [
-                              DataColumn(
-                                  label: Center(
-                                      child: Text('Дата',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: 'Futura',
-                                              fontSize: 24)))),
-                              DataColumn(
-                                  label: Center(
-                                      child: Text('ФОП',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: 'Futura',
-                                              fontSize: 24)))),
-                            ],
-                            rows: _data.map((item) {
-                              return DataRow(
-                                color: item.status != true
-                                    ? WidgetStateProperty.all(
-                                        Colors.transparent)
-                                    : WidgetStateProperty.all(Colors.orange),
-                                cells: [
-                                  DataCell(Center(
-                                      child: Text(item.date,
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: 'Futura',
-                                              fontSize: 20)))),
-                                  DataCell(Center(
-                                      child: Text(item.fop,
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: 'Futura',
-                                              fontSize: 18)))),
-                                ],
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-          Positioned(
-            bottom: 20,
-            left: 50,
-            right: 50,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => MyInheritedWidget(
-                            name: widget.name,
-                            data: _data,
-                            child: const CreateQualityControllResultPage(),
-                          ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: Colors.orange,
-                      disabledBackgroundColor: Colors.orange,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    ),
-                    child: const Text(
-                      'Створити',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 2),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: const TextSpan(
-                    text: 'Версія: 1.0.1',
-                    style: TextStyle(color: Colors.black, fontFamily: 'Futura'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
