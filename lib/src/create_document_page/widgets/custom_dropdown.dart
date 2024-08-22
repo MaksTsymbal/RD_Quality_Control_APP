@@ -4,6 +4,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 class CustomDropdown extends StatelessWidget {
   final String labelText;
   final List<String> items;
+  final String? value;
   final void Function(String?) onChanged;
 
   const CustomDropdown({
@@ -11,6 +12,7 @@ class CustomDropdown extends StatelessWidget {
     required this.labelText,
     required this.items,
     required this.onChanged,
+    this.value,
   });
 
   @override
@@ -18,6 +20,7 @@ class CustomDropdown extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: DropdownButtonFormField2<String>(
+        value: value,
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: const TextStyle(
@@ -73,7 +76,7 @@ class CustomDropdown extends StatelessWidget {
       if (i < items.length - 1) {
         menuItems.add(
           DropdownMenuItem<String>(
-            enabled: false, // Disable the divider from being selectable
+            enabled: false,
             child: Divider(
               height: 1,
               color: Colors.grey[400],

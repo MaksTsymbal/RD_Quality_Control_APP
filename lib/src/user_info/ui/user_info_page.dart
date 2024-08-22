@@ -95,8 +95,7 @@ class UserPage extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
-                      backgroundColor:
-                          const Color.fromARGB(255, 183, 164, 136),
+                      backgroundColor: const Color.fromARGB(255, 183, 164, 136),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25.0),
                       ),
@@ -165,8 +164,10 @@ class UserPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15.0),
           ),
           onPressed: () {
-            Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                (route) => false);
           },
           child: const Text('Вийти з аккаунту', style: TextStyle(fontSize: 18)),
         ),

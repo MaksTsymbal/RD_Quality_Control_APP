@@ -64,8 +64,8 @@ flutter:
   assets:
     - assets/images/
   #   - images/a_dot_ham.jpeg
-    - lib/src/loginPage/data/
-    - lib/src/mainPage/data/
+    - lib/src/login_page/data/
+    - lib/src/main_page/data/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

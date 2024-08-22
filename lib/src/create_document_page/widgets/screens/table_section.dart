@@ -25,8 +25,10 @@ class TableSection extends StatelessWidget {
                   inheritedWidget.selectedDate ?? 'Нічого не вибрано'),
               _buildTableRow('Постачальник:',
                   inheritedWidget.selectedSupplier ?? 'Нічого не вибрано'),
-              _buildTableRow('Стан транспортного засобу:',
-                  inheritedWidget.selectedVehicleCondition ?? 'Нічого не вибрано'),
+              _buildTableRow(
+                  'Стан транспортного засобу:',
+                  inheritedWidget.selectedVehicleCondition ??
+                      'Нічого не вибрано'),
               _buildTableRow('Постачальник схвалений:',
                   inheritedWidget.isSupplierApprovedSelected ? 'Так' : 'Ні'),
               _buildTableRow('Температура виміряна:',
