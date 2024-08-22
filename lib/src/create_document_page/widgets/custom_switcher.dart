@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 
 class CustomSwitch extends StatefulWidget {
-  const CustomSwitch({super.key});
+  final List<String> labels;
+  final Function(int index)? onChanged;
+  final int initialIndex;
+
+  const CustomSwitch({
+    super.key,
+    required this.labels,
+    this.onChanged,
+    this.initialIndex = 0,
+  });
 
   @override
   State<CustomSwitch> createState() => _CustomSwitchState();
 }
 
 class _CustomSwitchState extends State<CustomSwitch> {
-  int selectedIndex = 0;
+  late int selectedIndex;
 
-  final List<String> labels = ["Основне", "Таблиця", "Безпека", "Якість"];
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.initialIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
     final double switchWidth = MediaQuery.of(context).size.width - 20;
-    final double buttonWidth = switchWidth / labels.length;
+    final double buttonWidth = switchWidth / widget.labels.length;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -47,9 +60,14 @@ class _CustomSwitchState extends State<CustomSwitch> {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
+                  onEnd: () {
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(selectedIndex);
+                    }
+                  },
                 ),
                 Row(
-                  children: List.generate(labels.length, (index) {
+                  children: List.generate(widget.labels.length, (index) {
                     return Expanded(
                       child: GestureDetector(
                         onTap: () {
@@ -60,7 +78,7 @@ class _CustomSwitchState extends State<CustomSwitch> {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                            labels[index],
+                            widget.labels[index],
                             style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.normal,

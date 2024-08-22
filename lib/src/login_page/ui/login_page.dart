@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:check_point/src/loginPage/data/user_model.dart';
+import 'package:check_point/src/login_page/data/user_model.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _loadUserData() async {
     _userData =
-        await User.loadUserData('lib/src/loginPage/data/test_auth.json');
+        await User.loadUserData('lib/src/login_page/data/test_auth.json');
     setState(() {});
   }
 
