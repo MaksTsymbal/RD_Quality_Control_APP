@@ -1,42 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:check_point/src/main_page/data/inherited_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:check_point/providers/quality_control_document_riverpod_provider.dart';
 
-class TableSection extends StatelessWidget {
+class TableSection extends ConsumerWidget {
+  /// use riverpod for state management
   const TableSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Builder(
-      builder: (BuildContext innerContext) {
-        final inheritedWidget = MyInheritedWidget.of(innerContext);
-        return Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: Table(
-            border: TableBorder.all(color: Colors.black, width: 1),
-            columnWidths: const {
-              0: FlexColumnWidth(1),
-              1: FlexColumnWidth(2),
-            },
-            children: [
-              _buildTableRow('Автор:', inheritedWidget.name),
-              _buildTableRow('Склад надходження:',
-                  inheritedWidget.selectedWarehouse ?? 'Нічого не вибрано'),
-              _buildTableRow('Дата надходження товару:',
-                  inheritedWidget.selectedDate ?? 'Нічого не вибрано'),
-              _buildTableRow('Постачальник:',
-                  inheritedWidget.selectedSupplier ?? 'Нічого не вибрано'),
-              _buildTableRow(
-                  'Стан транспортного засобу:',
-                  inheritedWidget.selectedVehicleCondition ??
-                      'Нічого не вибрано'),
-              _buildTableRow('Постачальник схвалений:',
-                  inheritedWidget.isSupplierApprovedSelected ? 'Так' : 'Ні'),
-              _buildTableRow('Температура виміряна:',
-                  inheritedWidget.isTemperatureMeasuredSelected ? 'Так' : 'Ні'),
-            ],
-          ),
-        );
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final name = ref.watch(nameProvider);
+    final selectedWarehouse = ref.watch(warehouseProvider);
+    final selectedDate = ref.watch(dateProvider);
+    final selectedSupplier = ref.watch(supplierProvider);
+    final isSupplierApproved = ref.watch(supplierApprovalProvider);
+    final isTemperatureMeasured = ref.watch(temperatureMeasuredProvider);
+    final selectedVehicleCondition = ref.watch(vehicleConditionProvider);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Table(
+        border: TableBorder.all(color: Colors.black, width: 1),
+        columnWidths: const {
+          0: FlexColumnWidth(1),
+          1: FlexColumnWidth(2),
+        },
+        children: [
+          _buildTableRow('Автор:', name),
+          _buildTableRow(
+              'Склад надходження:', selectedWarehouse ?? 'Нічого не вибрано'),
+          _buildTableRow(
+              'Дата надходження товару:', selectedDate ?? 'Нічого не вибрано'),
+          _buildTableRow(
+              'Постачальник:', selectedSupplier ?? 'Нічого не вибрано'),
+          _buildTableRow('Стан транспортного засобу:',
+              selectedVehicleCondition ?? 'Нічого не вибрано'),
+          _buildTableRow(
+              'Постачальник схвалений:', isSupplierApproved ? 'Так' : 'Ні'),
+          _buildTableRow(
+              'Температура виміряна:', isTemperatureMeasured ? 'Так' : 'Ні'),
+        ],
+      ),
     );
   }
 

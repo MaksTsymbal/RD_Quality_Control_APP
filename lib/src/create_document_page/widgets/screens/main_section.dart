@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:check_point/src/main_page/data/inherited_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:check_point/src/create_document_page/widgets/custom_dropdown.dart';
+import 'package:check_point/providers/quality_control_document_riverpod_provider.dart';
 
-class MainSection extends StatelessWidget {
-  final ValueChanged<String?> onWarehouseChanged;
-  final ValueChanged<String?> onDateChanged;
-  final ValueChanged<String?> onSupplierChanged;
-  final ValueChanged<String?> onVehicleConditionChanged;
-  final ValueChanged<bool> onSupplierApprovalChanged;
-  final ValueChanged<bool> onTemperatureMeasuredChanged;
-
-  const MainSection({
-    super.key,
-    required this.onWarehouseChanged,
-    required this.onDateChanged,
-    required this.onSupplierChanged,
-    required this.onVehicleConditionChanged,
-    required this.onSupplierApprovalChanged,
-    required this.onTemperatureMeasuredChanged,
-  });
+class MainSection extends ConsumerWidget {
+  /// use riverpod for state management
+  const MainSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final inheritedWidget = MyInheritedWidget.of(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedWarehouse = ref.watch(warehouseProvider);
+    final selectedDate = ref.watch(dateProvider);
+    final selectedSupplier = ref.watch(supplierProvider);
+    final isSupplierApproved = ref.watch(supplierApprovalProvider);
+    final isTemperatureMeasured = ref.watch(temperatureMeasuredProvider);
+    final selectedVehicleCondition = ref.watch(vehicleConditionProvider);
 
     return Center(
       child: Column(
@@ -32,22 +24,24 @@ class MainSection extends StatelessWidget {
           CustomDropdown(
             labelText: 'Склад надходження',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: inheritedWidget.selectedWarehouse,
-            onChanged: onWarehouseChanged,
+            value: selectedWarehouse,
+            onChanged: (value) =>
+                ref.read(warehouseProvider.notifier).state = value,
           ),
           const SizedBox(height: 20),
           CustomDropdown(
             labelText: 'Дата надходження товару',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: inheritedWidget.selectedDate,
-            onChanged: onDateChanged,
+            value: selectedDate,
+            onChanged: (value) => ref.read(dateProvider.notifier).state = value,
           ),
           const SizedBox(height: 20),
           CustomDropdown(
             labelText: 'Постачальник',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: inheritedWidget.selectedSupplier,
-            onChanged: onSupplierChanged,
+            value: selectedSupplier,
+            onChanged: (value) =>
+                ref.read(supplierProvider.notifier).state = value,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -63,8 +57,10 @@ class MainSection extends StatelessWidget {
                         style: TextStyle(fontSize: 16)),
                     Switch(
                       activeTrackColor: Colors.orange,
-                      value: inheritedWidget.isSupplierApprovedSelected,
-                      onChanged: onSupplierApprovalChanged,
+                      value: isSupplierApproved,
+                      onChanged: (value) => ref
+                          .read(supplierApprovalProvider.notifier)
+                          .state = value,
                     ),
                   ],
                 ),
@@ -76,8 +72,10 @@ class MainSection extends StatelessWidget {
                         style: TextStyle(fontSize: 16)),
                     Switch(
                       activeTrackColor: Colors.orange,
-                      value: inheritedWidget.isTemperatureMeasuredSelected,
-                      onChanged: onTemperatureMeasuredChanged,
+                      value: isTemperatureMeasured,
+                      onChanged: (value) => ref
+                          .read(temperatureMeasuredProvider.notifier)
+                          .state = value,
                     ),
                   ],
                 ),
@@ -88,8 +86,9 @@ class MainSection extends StatelessWidget {
           CustomDropdown(
             labelText: 'Стан транспортного засобу',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: inheritedWidget.selectedVehicleCondition,
-            onChanged: onVehicleConditionChanged,
+            value: selectedVehicleCondition,
+            onChanged: (value) =>
+                ref.read(vehicleConditionProvider.notifier).state = value,
           ),
         ],
       ),

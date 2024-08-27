@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart' as provider;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:check_point/src/login_page/ui/login_page.dart';
 import 'package:check_point/src/main_page/ui/main_page.dart';
 import 'package:check_point/src/create_document_page/ui/create_document_page.dart';
 import 'package:check_point/src/user_info/ui/user_info_page.dart';
 import 'package:check_point/src/main_page/data/info_model.dart';
+import 'package:check_point/providers/login_provider.dart';
+import 'package:check_point/providers/documents_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: provider.MultiProvider(
+        providers: [
+          provider.ChangeNotifierProvider(create: (_) => UserProvider()),
+          provider.ChangeNotifierProvider(create: (_) => DocumentsProvider()),
+        ],
+        child: const MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

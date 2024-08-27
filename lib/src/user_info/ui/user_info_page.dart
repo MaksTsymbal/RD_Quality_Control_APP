@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:check_point/src/main_page/data/inherited_widget.dart';
 import 'package:check_point/src/user_info/widgets/custom_dialog.dart';
 import 'package:check_point/src/login_page/ui/login_page.dart';
+import 'package:check_point/providers/login_provider.dart';
+import 'package:check_point/providers/documents_provider.dart';
 
 class UserPage extends StatelessWidget {
+  /// use provider for state management
   const UserPage({super.key});
 
   @override
@@ -24,9 +27,10 @@ class UserPage extends StatelessWidget {
           ],
         ),
       ),
-      body: Builder(
-        builder: (BuildContext innerContext) {
-          final user = MyInheritedWidget.of(innerContext);
+      body: Consumer2<UserProvider, DocumentsProvider>(
+        builder: (context, userProvider, documentProvider, child) {
+          final user = userProvider.user;
+          final documentCount = documentProvider.documentCount;
           return Padding(
             padding: const EdgeInsets.only(right: 16.0, left: 16.0, top: 42.0),
             child: Column(
@@ -70,7 +74,7 @@ class UserPage extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: '${user.data.length}',
+                                  text: '$documentCount',
                                   style: const TextStyle(
                                       fontSize: 22, color: Colors.red),
                                 ),
@@ -109,7 +113,7 @@ class UserPage extends StatelessWidget {
                         permission = await Geolocator.requestPermission();
                         if (permission == LocationPermission.denied) {
                           showDialog(
-                            context: innerContext,
+                            context: context,
                             builder: (BuildContext context) {
                               return const CustomDialog(
                                 title: 'Помилка',
@@ -119,7 +123,7 @@ class UserPage extends StatelessWidget {
                           );
                         } else {
                           showDialog(
-                            context: innerContext,
+                            context: context,
                             builder: (BuildContext context) {
                               return const CustomDialog(
                                 title: 'Успіх',
@@ -130,7 +134,7 @@ class UserPage extends StatelessWidget {
                         }
                       } else {
                         showDialog(
-                          context: innerContext,
+                          context: context,
                           builder: (BuildContext context) {
                             return const CustomDialog(
                               title: 'Успіх',

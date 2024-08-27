@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:check_point/src/login_page/data/user_model.dart';
+import 'package:check_point/src/login_page/data/login_model.dart';
+import 'package:check_point/providers/login_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
+  /// use provider for state management
   const LoginPage({super.key});
 
   @override
@@ -12,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isPasswordHidden = true;
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  List<User> _userData = [];
+  List<LoginModel> _userData = [];
 
   @override
   void initState() {
@@ -37,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _loadUserData() async {
     _userData =
-        await User.loadUserData('lib/src/login_page/data/test_auth.json');
+        await LoginModel.loadUserData('lib/src/login_page/data/test_auth.json');
     setState(() {});
   }
 
@@ -47,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
 
     for (var user in _userData) {
       if (user.login == login && user.password == password) {
+        Provider.of<UserProvider>(context, listen: false).updateUser(user);
         Navigator.popAndPushNamed(context, 'main', arguments: user.name);
         return;
       }
