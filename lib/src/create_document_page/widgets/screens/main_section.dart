@@ -1,28 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:check_point/src/main_page/data/inherited_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:check_point/src/create_document_page/widgets/custom_dropdown.dart';
+import 'package:check_point/providers/quality_control_document_provider.dart';
 
 class MainSection extends StatelessWidget {
-  final ValueChanged<String?> onWarehouseChanged;
-  final ValueChanged<String?> onDateChanged;
-  final ValueChanged<String?> onSupplierChanged;
-  final ValueChanged<String?> onVehicleConditionChanged;
-  final ValueChanged<bool> onSupplierApprovalChanged;
-  final ValueChanged<bool> onTemperatureMeasuredChanged;
-
-  const MainSection({
-    super.key,
-    required this.onWarehouseChanged,
-    required this.onDateChanged,
-    required this.onSupplierChanged,
-    required this.onVehicleConditionChanged,
-    required this.onSupplierApprovalChanged,
-    required this.onTemperatureMeasuredChanged,
-  });
+  const MainSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final inheritedWidget = MyInheritedWidget.of(context);
+    final provider = Provider.of<QualityControlDocumentProvider>(context);
 
     return Center(
       child: Column(
@@ -32,27 +18,25 @@ class MainSection extends StatelessWidget {
           CustomDropdown(
             labelText: 'Склад надходження',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: inheritedWidget.selectedWarehouse,
-            onChanged: onWarehouseChanged,
+            value: provider.warehouse,
+            onChanged: (value) => provider.warehouse = value,
           ),
           const SizedBox(height: 20),
           CustomDropdown(
             labelText: 'Дата надходження товару',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: inheritedWidget.selectedDate,
-            onChanged: onDateChanged,
+            value: provider.date,
+            onChanged: (value) => provider.date = value,
           ),
           const SizedBox(height: 20),
           CustomDropdown(
             labelText: 'Постачальник',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: inheritedWidget.selectedSupplier,
-            onChanged: onSupplierChanged,
+            value: provider.supplier,
+            onChanged: (value) => provider.supplier = value,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: [
                 const SizedBox(height: 20),
@@ -63,8 +47,8 @@ class MainSection extends StatelessWidget {
                         style: TextStyle(fontSize: 16)),
                     Switch(
                       activeTrackColor: Colors.orange,
-                      value: inheritedWidget.isSupplierApprovedSelected,
-                      onChanged: onSupplierApprovalChanged,
+                      value: provider.supplierApproval,
+                      onChanged: (value) => provider.supplierApproval = value,
                     ),
                   ],
                 ),
@@ -76,8 +60,9 @@ class MainSection extends StatelessWidget {
                         style: TextStyle(fontSize: 16)),
                     Switch(
                       activeTrackColor: Colors.orange,
-                      value: inheritedWidget.isTemperatureMeasuredSelected,
-                      onChanged: onTemperatureMeasuredChanged,
+                      value: provider.temperatureMeasured,
+                      onChanged: (value) =>
+                          provider.temperatureMeasured = value,
                     ),
                   ],
                 ),
@@ -88,8 +73,8 @@ class MainSection extends StatelessWidget {
           CustomDropdown(
             labelText: 'Стан транспортного засобу',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: inheritedWidget.selectedVehicleCondition,
-            onChanged: onVehicleConditionChanged,
+            value: provider.vehicleCondition,
+            onChanged: (value) => provider.vehicleCondition = value,
           ),
         ],
       ),
