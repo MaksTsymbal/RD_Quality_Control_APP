@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:check_point/src/create_document_page/widgets/custom_switcher.dart';
 import 'package:check_point/src/create_document_page/widgets/screens/main_section.dart';
 import 'package:check_point/src/create_document_page/widgets/screens/table_section.dart';
-import 'package:check_point/providers/quality_control_document_riverpod_provider.dart';
+import 'package:check_point/providers/quality_control_document_provider.dart';
 
-class CreateQualityControllResultPage extends ConsumerWidget {
-  /// use riverpod for state management
+class CreateQualityControllResultPage extends StatefulWidget {
   final String name;
   final List<dynamic> data;
 
@@ -17,14 +16,27 @@ class CreateQualityControllResultPage extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  State<CreateQualityControllResultPage> createState() =>
+      _CreateQualityControllResultPageState();
+}
+
+class _CreateQualityControllResultPageState
+    extends State<CreateQualityControllResultPage> {
+  int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
     Future.microtask(() {
-      ref.read(nameProvider.notifier).state = name;
-      ref.read(dataProvider.notifier).state = data;
+      final provider =
+          Provider.of<QualityControlDocumentProvider>(context, listen: false);
+      provider.name = widget.name;
+      provider.data = widget.data;
     });
+  }
 
-    final currentIndex = ref.watch(_currentIndexProvider);
-
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 235, 208),
       appBar: AppBar(
@@ -36,12 +48,14 @@ class CreateQualityControllResultPage extends ConsumerWidget {
           CustomSwitch(
             labels: const ["Основне", "Таблиця", "Безпека", "Якість"],
             onChanged: (index) {
-              ref.read(_currentIndexProvider.notifier).state = index;
+              setState(() {
+                currentIndex = index;  // Оновлюємо індекс при зміні
+              });
             },
           ),
           Expanded(
             child: IndexedStack(
-              index: currentIndex,
+              index: currentIndex,  // Використовуємо локальний стан індексу
               children: const [
                 MainSection(),
                 TableSection(),
@@ -69,5 +83,3 @@ class CreateQualityControllResultPage extends ConsumerWidget {
     );
   }
 }
-
-final _currentIndexProvider = StateProvider<int>((ref) => 0);

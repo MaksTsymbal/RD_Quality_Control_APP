@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:check_point/src/create_document_page/widgets/custom_dropdown.dart';
-import 'package:check_point/providers/quality_control_document_riverpod_provider.dart';
+import 'package:check_point/providers/quality_control_document_provider.dart';
 
-class MainSection extends ConsumerWidget {
-  /// use riverpod for state management
+class MainSection extends StatelessWidget {
   const MainSection({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedWarehouse = ref.watch(warehouseProvider);
-    final selectedDate = ref.watch(dateProvider);
-    final selectedSupplier = ref.watch(supplierProvider);
-    final isSupplierApproved = ref.watch(supplierApprovalProvider);
-    final isTemperatureMeasured = ref.watch(temperatureMeasuredProvider);
-    final selectedVehicleCondition = ref.watch(vehicleConditionProvider);
+  Widget build(BuildContext context) {
+    final provider = Provider.of<QualityControlDocumentProvider>(context);
 
     return Center(
       child: Column(
@@ -24,29 +18,25 @@ class MainSection extends ConsumerWidget {
           CustomDropdown(
             labelText: 'Склад надходження',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: selectedWarehouse,
-            onChanged: (value) =>
-                ref.read(warehouseProvider.notifier).state = value,
+            value: provider.warehouse,
+            onChanged: (value) => provider.warehouse = value,
           ),
           const SizedBox(height: 20),
           CustomDropdown(
             labelText: 'Дата надходження товару',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: selectedDate,
-            onChanged: (value) => ref.read(dateProvider.notifier).state = value,
+            value: provider.date,
+            onChanged: (value) => provider.date = value,
           ),
           const SizedBox(height: 20),
           CustomDropdown(
             labelText: 'Постачальник',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: selectedSupplier,
-            onChanged: (value) =>
-                ref.read(supplierProvider.notifier).state = value,
+            value: provider.supplier,
+            onChanged: (value) => provider.supplier = value,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Column(
               children: [
                 const SizedBox(height: 20),
@@ -57,10 +47,8 @@ class MainSection extends ConsumerWidget {
                         style: TextStyle(fontSize: 16)),
                     Switch(
                       activeTrackColor: Colors.orange,
-                      value: isSupplierApproved,
-                      onChanged: (value) => ref
-                          .read(supplierApprovalProvider.notifier)
-                          .state = value,
+                      value: provider.supplierApproval,
+                      onChanged: (value) => provider.supplierApproval = value,
                     ),
                   ],
                 ),
@@ -72,10 +60,9 @@ class MainSection extends ConsumerWidget {
                         style: TextStyle(fontSize: 16)),
                     Switch(
                       activeTrackColor: Colors.orange,
-                      value: isTemperatureMeasured,
-                      onChanged: (value) => ref
-                          .read(temperatureMeasuredProvider.notifier)
-                          .state = value,
+                      value: provider.temperatureMeasured,
+                      onChanged: (value) =>
+                          provider.temperatureMeasured = value,
                     ),
                   ],
                 ),
@@ -86,9 +73,8 @@ class MainSection extends ConsumerWidget {
           CustomDropdown(
             labelText: 'Стан транспортного засобу',
             items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
-            value: selectedVehicleCondition,
-            onChanged: (value) =>
-                ref.read(vehicleConditionProvider.notifier).state = value,
+            value: provider.vehicleCondition,
+            onChanged: (value) => provider.vehicleCondition = value,
           ),
         ],
       ),

@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:check_point/providers/quality_control_document_riverpod_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:check_point/providers/quality_control_document_provider.dart';
+import 'package:check_point/src/create_document_page/widgets/custom_table_row.dart';
 
-class TableSection extends ConsumerWidget {
-  /// use riverpod for state management
+class TableSection extends StatelessWidget {
   const TableSection({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final name = ref.watch(nameProvider);
-    final selectedWarehouse = ref.watch(warehouseProvider);
-    final selectedDate = ref.watch(dateProvider);
-    final selectedSupplier = ref.watch(supplierProvider);
-    final isSupplierApproved = ref.watch(supplierApprovalProvider);
-    final isTemperatureMeasured = ref.watch(temperatureMeasuredProvider);
-    final selectedVehicleCondition = ref.watch(vehicleConditionProvider);
+  Widget build(BuildContext context) {
+    final provider = Provider.of<QualityControlDocumentProvider>(context);
+
+    final name = provider.name;
+    final selectedWarehouse = provider.warehouse ?? 'Нічого не вибрано';
+    final selectedDate = provider.date ?? 'Нічого не вибрано';
+    final selectedSupplier = provider.supplier ?? 'Нічого не вибрано';
+    final isSupplierApproved = provider.supplierApproval ? 'Так' : 'Ні';
+    final isTemperatureMeasured = provider.temperatureMeasured ? 'Так' : 'Ні';
+    final selectedVehicleCondition =
+        provider.vehicleCondition ?? 'Нічого не вибрано';
 
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
@@ -25,42 +28,20 @@ class TableSection extends ConsumerWidget {
           1: FlexColumnWidth(2),
         },
         children: [
-          _buildTableRow('Автор:', name),
-          _buildTableRow(
-              'Склад надходження:', selectedWarehouse ?? 'Нічого не вибрано'),
-          _buildTableRow(
-              'Дата надходження товару:', selectedDate ?? 'Нічого не вибрано'),
-          _buildTableRow(
-              'Постачальник:', selectedSupplier ?? 'Нічого не вибрано'),
-          _buildTableRow('Стан транспортного засобу:',
-              selectedVehicleCondition ?? 'Нічого не вибрано'),
-          _buildTableRow(
-              'Постачальник схвалений:', isSupplierApproved ? 'Так' : 'Ні'),
-          _buildTableRow(
-              'Температура виміряна:', isTemperatureMeasured ? 'Так' : 'Ні'),
+          TableRowWidget(title: 'Автор:', value: name),
+          TableRowWidget(title: 'Склад надходження:', value: selectedWarehouse),
+          TableRowWidget(
+              title: 'Дата надходження товару:', value: selectedDate),
+          TableRowWidget(title: 'Постачальник:', value: selectedSupplier),
+          TableRowWidget(
+              title: 'Стан транспортного засобу:',
+              value: selectedVehicleCondition),
+          TableRowWidget(
+              title: 'Постачальник схвалений:', value: isSupplierApproved),
+          TableRowWidget(
+              title: 'Температура виміряна:', value: isTemperatureMeasured),
         ],
       ),
-    );
-  }
-
-  TableRow _buildTableRow(String title, String value) {
-    return TableRow(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            title,
-            style: const TextStyle(fontSize: 18, color: Colors.black),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            value,
-            style: const TextStyle(fontSize: 18, color: Colors.black),
-          ),
-        ),
-      ],
     );
   }
 }
