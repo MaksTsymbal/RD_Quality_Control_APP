@@ -1,3 +1,4 @@
+import 'package:check_point/src/main_page/data/info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:check_point/src/create_document_page/widgets/custom_switcher.dart';
@@ -7,7 +8,7 @@ import 'package:check_point/providers/quality_control_document_provider.dart';
 
 class CreateQualityControllResultPage extends StatefulWidget {
   final String name;
-  final List<dynamic> data;
+  final List<InfoModel> data;
 
   const CreateQualityControllResultPage({
     super.key,
@@ -49,13 +50,13 @@ class _CreateQualityControllResultPageState
             labels: const ["Основне", "Таблиця", "Безпека", "Якість"],
             onChanged: (index) {
               setState(() {
-                currentIndex = index;  // Оновлюємо індекс при зміні
+                currentIndex = index;
               });
             },
           ),
           Expanded(
             child: IndexedStack(
-              index: currentIndex,  // Використовуємо локальний стан індексу
+              index: currentIndex,
               children: const [
                 MainSection(),
                 TableSection(),
