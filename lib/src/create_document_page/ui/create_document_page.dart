@@ -5,6 +5,7 @@ import 'package:check_point/src/create_document_page/widgets/custom_switcher.dar
 import 'package:check_point/src/create_document_page/widgets/screens/main_section.dart';
 import 'package:check_point/src/create_document_page/widgets/screens/table_section.dart';
 import 'package:check_point/providers/quality_control_document_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateQualityControllResultPage extends StatefulWidget {
   final String name;
@@ -73,7 +74,7 @@ class _CreateQualityControllResultPageState
             side: const BorderSide(color: Colors.black),
           ),
           onPressed: () {
-            Navigator.pop(context);
+            context.pop();
           },
           child: const Text(
             'Додати позицію номенклатури',

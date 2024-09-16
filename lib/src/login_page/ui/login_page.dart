@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:check_point/src/login_page/data/login_model.dart';
 import 'package:check_point/providers/login_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   /// use provider for state management
@@ -51,7 +52,10 @@ class _LoginPageState extends State<LoginPage> {
     for (var user in _userData) {
       if (user.login == login && user.password == password) {
         Provider.of<UserProvider>(context, listen: false).updateUser(user);
-        Navigator.popAndPushNamed(context, 'main', arguments: user.name);
+        context.goNamed(
+          'main',
+          pathParameters: {'name': user.name},
+        );
         return;
       }
     }

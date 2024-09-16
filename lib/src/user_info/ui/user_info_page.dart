@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:check_point/src/user_info/widgets/custom_dialog.dart';
-import 'package:check_point/src/login_page/ui/login_page.dart';
+import 'package:go_router/go_router.dart';
 import 'package:check_point/providers/login_provider.dart';
 import 'package:check_point/providers/documents_provider.dart';
 
@@ -168,10 +168,7 @@ class UserPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15.0),
           ),
           onPressed: () {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-                (route) => false);
+            context.goNamed('login');
           },
           child: const Text('Вийти з аккаунту', style: TextStyle(fontSize: 18)),
         ),

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:check_point/src/main_page/data/info_model.dart';
-import 'package:check_point/src/user_info/ui/user_info_page.dart';
-import 'package:check_point/src/create_document_page/ui/create_document_page.dart';
+import 'package:go_router/go_router.dart';
 import 'package:check_point/providers/documents_provider.dart';
 
 class MainPage extends StatefulWidget {
@@ -56,11 +55,7 @@ class _MainPageState extends State<MainPage> {
             const Spacer(flex: 2),
             IconButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const UserPage(),
-                  ),
-                );
+                context.pushNamed('user_page');
               },
               icon: const Icon(
                 Icons.person_outline,
@@ -154,13 +149,12 @@ class _MainPageState extends State<MainPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CreateQualityControllResultPage(
-                            name: widget.name,
-                            data: context.read<DocumentsProvider>().documents,
-                          ),
-                        ),
+                      context.pushNamed(
+                        'create_document',
+                        extra: {
+                          'name': widget.name,
+                          'data': context.read<DocumentsProvider>().documents,
+                        },
                       );
                     },
                     style: ElevatedButton.styleFrom(
