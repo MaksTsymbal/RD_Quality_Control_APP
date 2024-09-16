@@ -52,7 +52,10 @@ class _LoginPageState extends State<LoginPage> {
     for (var user in _userData) {
       if (user.login == login && user.password == password) {
         Provider.of<UserProvider>(context, listen: false).updateUser(user);
-        context.go('/main/${user.name}');
+        context.goNamed(
+          'main',
+          pathParameters: {'name': user.name},
+        );
         return;
       }
     }

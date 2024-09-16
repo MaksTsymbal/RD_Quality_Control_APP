@@ -11,10 +11,10 @@ class AppRouter {
 
   AppRouter()
       : _router = GoRouter(
-          initialLocation: '/',
+          initialLocation: '/login',
           routes: [
             GoRoute(
-              path: '/',
+              path: '/login',
               name: 'login',
               builder: (context, state) => const LoginPage(),
             ),

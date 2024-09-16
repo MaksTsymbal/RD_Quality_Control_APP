@@ -55,7 +55,7 @@ class _MainPageState extends State<MainPage> {
             const Spacer(flex: 2),
             IconButton(
               onPressed: () {
-                context.push('/user_page');
+                context.pushNamed('user_page');
               },
               icon: const Icon(
                 Icons.person_outline,
@@ -149,8 +149,8 @@ class _MainPageState extends State<MainPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      context.push(
-                        '/create_document',
+                      context.pushNamed(
+                        'create_document',
                         extra: {
                           'name': widget.name,
                           'data': context.read<DocumentsProvider>().documents,

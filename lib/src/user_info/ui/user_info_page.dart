@@ -168,7 +168,7 @@ class UserPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15.0),
           ),
           onPressed: () {
-            context.go('/');
+            context.goNamed('login');
           },
           child: const Text('Вийти з аккаунту', style: TextStyle(fontSize: 18)),
         ),

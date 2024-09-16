@@ -23,13 +23,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appRouter = AppRouter();
-
     return MaterialApp.router(
       title: 'Check-Point',
-      routerDelegate: appRouter.router.routerDelegate,
-      routeInformationParser: appRouter.router.routeInformationParser,
-      routeInformationProvider: appRouter.router.routeInformationProvider,
+      routerConfig: AppRouter().router,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
