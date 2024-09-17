@@ -9,7 +9,7 @@ class InfoModel {
     required this.status,
   });
 
-  factory InfoModel.fromJson(Map<String, dynamic> json) {
+  factory InfoModel.fromJson(Map<String, Object?> json) {
     return InfoModel(
       date: json['date'] as String,
       fop: json['FOP'] as String,

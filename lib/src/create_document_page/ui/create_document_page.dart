@@ -39,6 +39,9 @@ class _CreateQualityControllResultPageState
 
   @override
   Widget build(BuildContext context) {
+    final bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 235, 208),
       appBar: AppBar(
@@ -56,13 +59,23 @@ class _CreateQualityControllResultPageState
             },
           ),
           Expanded(
-            child: IndexedStack(
-              index: currentIndex,
-              children: const [
-                MainSection(),
-                TableSection(),
-              ],
-            ),
+            child: isLandscape
+                ? SingleChildScrollView(
+                    child: IndexedStack(
+                      index: currentIndex,
+                      children: const [
+                        MainSection(),
+                        TableSection(),
+                      ],
+                    ),
+                  )
+                : IndexedStack(
+                    index: currentIndex,
+                    children: const [
+                      MainSection(),
+                      TableSection(),
+                    ],
+                  ),
           ),
         ],
       ),
