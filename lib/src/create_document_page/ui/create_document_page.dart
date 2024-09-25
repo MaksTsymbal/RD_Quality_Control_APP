@@ -56,12 +56,27 @@ class _CreateQualityControllResultPageState
             },
           ),
           Expanded(
-            child: IndexedStack(
-              index: currentIndex,
-              children: const [
-                MainSection(),
-                TableSection(),
-              ],
+            child: OrientationBuilder(
+              builder: (context, orientation) {
+                bool isLandscape = orientation == Orientation.landscape;
+                return isLandscape
+                    ? SingleChildScrollView(
+                        child: IndexedStack(
+                          index: currentIndex,
+                          children: const [
+                            MainSection(),
+                            TableSection(),
+                          ],
+                        ),
+                      )
+                    : IndexedStack(
+                        index: currentIndex,
+                        children: const [
+                          MainSection(),
+                          TableSection(),
+                        ],
+                      );
+              },
             ),
           ),
         ],

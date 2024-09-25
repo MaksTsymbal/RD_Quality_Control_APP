@@ -4,6 +4,8 @@ import 'package:check_point/providers/login_provider.dart';
 import 'package:check_point/providers/documents_provider.dart';
 import 'package:check_point/providers/quality_control_document_provider.dart';
 import 'package:check_point/routing/router.dart';
+import 'package:check_point/common/theme/responsive_theme.dart';
+import 'package:check_point/common/custom_theme_data.dart';
 
 void main() {
   runApp(
@@ -23,12 +25,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Check-Point',
-      routerConfig: AppRouter().router,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return AppResponsiveTheme(
+      data: CustomThemeData.forLayoutBreakpoint,
+      child: MaterialApp.router(
+        title: 'Check-Point',
+        routerConfig: AppRouter().router,
       ),
     );
   }
