@@ -1,3 +1,4 @@
+import 'package:check_point/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,6 +6,8 @@ import 'package:check_point/src/user_info/widgets/custom_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:check_point/providers/login_provider.dart';
 import 'package:check_point/providers/documents_provider.dart';
+import 'package:check_point/common/theme/theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserPage extends StatelessWidget {
   /// use provider for state management
@@ -12,13 +15,20 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = AppTheme.themeOf(context);
     final bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 235, 208),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 235, 208),
+        backgroundColor: theme.scaffoldBackgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
+          onPressed: () {
+            context.pop();
+          },
+        ),
         title: Column(
           children: [
             Image.asset(
@@ -29,6 +39,21 @@ class UserPage extends StatelessWidget {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              theme.brightness == Brightness.dark
+                  ? Icons.nights_stay_outlined
+                  : Icons.wb_sunny_outlined,
+              color: theme.colorScheme.primary,
+            ),
+            onPressed: () {
+              final themeProvider =
+                  Provider.of<ThemeProvider>(context, listen: false);
+              themeProvider.toggleTheme();
+            },
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -49,22 +74,19 @@ class UserPage extends StatelessWidget {
                               children: [
                                 Text(
                                   '${user.name} ${user.name}',
-                                  style: const TextStyle(fontSize: 28),
+                                  style: theme.textTheme.bodyLarge,
                                   textAlign: TextAlign.center,
                                 ),
-                                const Divider(color: Colors.black),
+                                Divider(color: theme.colorScheme.primary),
                                 RichText(
                                   textAlign: TextAlign.center,
                                   softWrap: true,
                                   text: TextSpan(
                                     children: [
-                                      const TextSpan(
+                                      TextSpan(
                                         text:
-                                            'Кількість створених документів за сьогодні: ',
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          color: Colors.black,
-                                        ),
+                                            '${AppLocalizations.of(context)!.num_of_documents_today} ',
+                                        style: theme.textTheme.bodyLarge,
                                       ),
                                       TextSpan(
                                         text: '$documentCount',
@@ -74,10 +96,10 @@ class UserPage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                const Divider(color: Colors.black),
-                                const Text(
-                                  'Дата прийняття на роботу: 20.08.2024',
-                                  style: TextStyle(fontSize: 22),
+                                Divider(color: theme.colorScheme.primary),
+                                Text(
+                                  AppLocalizations.of(context)!.date_of_start_work,
+                                  style: theme.textTheme.bodyLarge,
                                   textAlign: TextAlign.center,
                                 ),
                               ],
@@ -118,22 +140,19 @@ class UserPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       '${user.name} ${user.name}',
-                                      style: const TextStyle(fontSize: 28),
+                                      style: theme.textTheme.bodyLarge,
                                       textAlign: TextAlign.center,
                                     ),
-                                    const Divider(color: Colors.black),
+                                    Divider(color: theme.colorScheme.primary),
                                     RichText(
                                       textAlign: TextAlign.center,
                                       softWrap: true,
                                       text: TextSpan(
                                         children: [
-                                          const TextSpan(
+                                          TextSpan(
                                             text:
-                                                'Кількість створених документів за сьогодні: ',
-                                            style: TextStyle(
-                                              fontSize: 22,
-                                              color: Colors.black,
-                                            ),
+                                                '${AppLocalizations.of(context)!.num_of_documents_today} ',
+                                            style: theme.textTheme.bodyLarge
                                           ),
                                           TextSpan(
                                             text: '$documentCount',
@@ -144,10 +163,10 @@ class UserPage extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    const Divider(color: Colors.black),
-                                    const Text(
-                                      'Дата прийняття на роботу: 20.08.2024',
-                                      style: TextStyle(fontSize: 22),
+                                    Divider(color: theme.colorScheme.primary),
+                                    Text(
+                                      AppLocalizations.of(context)!.date_of_start_work,
+                                      style: theme.textTheme.bodyLarge,
                                       textAlign: TextAlign.center,
                                     ),
                                   ],
@@ -210,10 +229,10 @@ class UserPage extends StatelessWidget {
                                   );
                                 }
                               },
-                              child: const Text(
-                                'Перевірити\nНеобхідні дозволи',
+                              child: Text(
+                                AppLocalizations.of(context)!.check_properties,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 18, color: Colors.black),
                               ),
                             ),
@@ -230,7 +249,7 @@ class UserPage extends StatelessWidget {
             child: Container(
               padding:
                   const EdgeInsets.symmetric(vertical: 20.0, horizontal: 32.0),
-              color: const Color.fromARGB(255, 255, 235, 208),
+              color: theme.scaffoldBackgroundColor,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
@@ -243,8 +262,8 @@ class UserPage extends StatelessWidget {
                 onPressed: () {
                   context.goNamed('login');
                 },
-                child: const Text('Вийти з аккаунту',
-                    style: TextStyle(fontSize: 18)),
+                child: Text(AppLocalizations.of(context)!.logout,
+                    style: const TextStyle(fontSize: 18)),
               ),
             ),
           ),
