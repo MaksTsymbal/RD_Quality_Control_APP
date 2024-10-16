@@ -1,10 +1,11 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:check_point/src/main_page/data/info_model.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:check_point/src/main_page/data/async_documents_loader.dart';
 import 'package:go_router/go_router.dart';
 import 'package:check_point/providers/documents_provider.dart';
+import 'package:check_point/common/theme/theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MainPage extends StatefulWidget {
   /// use provider for state management
@@ -17,6 +18,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final DocumentsModel _documentsModel = DocumentsModel();
   @override
   void initState() {
     super.initState();
@@ -24,24 +26,19 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<void> _loadData() async {
-    final String response =
-        await rootBundle.loadString('lib/src/main_page/data/test_info.json');
+    final documents = await _documentsModel.fetchDocuments();
 
-    final List<Map<String, Object?>> dataList = (json.decode(response) as List)
-        .map((item) => item as Map<String, Object?>)
-        .toList();
-
-    List<InfoModel> documents =
-        dataList.map((item) => InfoModel.fromJson(item)).toList();
-
+    //work with provider
     Provider.of<DocumentsProvider>(context, listen: false)
         .setDocuments(documents);
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = AppTheme.themeOf(context);
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 235, 208),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -52,19 +49,13 @@ class _MainPageState extends State<MainPage> {
                   child: CustomScrollView(
                     slivers: [
                       SliverAppBar(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 235, 208),
+                        backgroundColor: theme.scaffoldBackgroundColor,
                         floating: true,
                         pinned: false,
                         flexibleSpace: FlexibleSpaceBar(
                           title: Text(
-                            'Вітаю, ${widget.name}',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Futura',
-                              fontSize: 30,
-                            ),
-                          ),
+                              '${AppLocalizations.of(context)!.hello} ${widget.name}',
+                              style: theme.textTheme.headlineMedium),
                         ),
                         actions: [
                           IconButton(
@@ -75,71 +66,136 @@ class _MainPageState extends State<MainPage> {
                               Icons.person_outline,
                               size: 35,
                             ),
-                            color: Colors.black,
+                            color: theme.colorScheme.primary,
                           ),
                         ],
                       ),
                       SliverToBoxAdapter(
-                        child: Consumer<DocumentsProvider>(
-                          builder: (context, documentsProvider, child) {
-                            final documents = documentsProvider.documents;
-                            return documents.isEmpty
-                                ? const Center(
-                                    child: CircularProgressIndicator())
-                                : Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 20.0),
-                                    child: DataTable(
-                                      columnSpacing: isSmallScreen ? 20 : 31,
-                                      dividerThickness: 2,
-                                      border: TableBorder.all(
-                                        color: Colors.black,
-                                        width: 1,
-                                      ),
-                                      columns: const [
-                                        DataColumn(
-                                            label: Center(
-                                                child: Text('Дата',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontFamily: 'Futura',
-                                                        fontSize: 24)))),
-                                        DataColumn(
-                                            label: Center(
-                                                child: Text('ФОП',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontFamily: 'Futura',
-                                                        fontSize: 24)))),
-                                      ],
-                                      rows: documents.map((item) {
-                                        return DataRow(
-                                          color: item.status != true
-                                              ? WidgetStateProperty.all(
-                                                  Colors.transparent)
-                                              : WidgetStateProperty.all(
-                                                  Colors.orange),
-                                          cells: [
-                                            DataCell(Center(
-                                                child: Text(item.date,
-                                                    style: const TextStyle(
-                                                        color: Colors.black,
-                                                        fontFamily: 'Futura',
-                                                        fontSize: 20)))),
-                                            DataCell(Center(
-                                                child: Text(item.fop,
-                                                    style: const TextStyle(
-                                                        color: Colors.black,
-                                                        fontFamily: 'Futura',
-                                                        fontSize: 18)))),
-                                          ],
-                                        );
-                                      }).toList(),
+                        child: FutureBuilder<List<InfoModel>>(
+                          future: _documentsModel.fetchAndConvertDocuments(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.hasData &&
+                                snapshot.data!.isNotEmpty) {
+                              final List<InfoModel> documents = snapshot.data!;
+
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20.0),
+                                child: DataTable(
+                                  columnSpacing: isSmallScreen ? 20 : 31,
+                                  dividerThickness: 2,
+                                  border: TableBorder.all(
+                                    color: theme.colorScheme.primary,
+                                    width: 1,
+                                  ),
+                                  columns: [
+                                    DataColumn(
+                                      label: Center(
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .data,
+                                              style:
+                                                  theme.textTheme.bodyLarge)),
                                     ),
-                                  );
+                                    DataColumn(
+                                      label: Center(
+                                          child: Text(
+                                              AppLocalizations.of(context)!.fop,
+                                              style:
+                                                  theme.textTheme.bodyLarge)),
+                                    ),
+                                  ],
+                                  rows: documents.map((item) {
+                                    return DataRow(
+                                      color: item.status != true
+                                          ? WidgetStateProperty.all(
+                                              Colors.transparent)
+                                          : WidgetStateProperty.all(
+                                              theme.cardColor),
+                                      cells: [
+                                        DataCell(Center(
+                                            child: Text(item.date,
+                                                style: theme
+                                                    .textTheme.bodyMedium))),
+                                        DataCell(Center(
+                                            child: Text(item.fop,
+                                                style: theme
+                                                    .textTheme.bodySmall))),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
+                              );
+                            } else {
+                              // Якщо немає документів у базі, використовуємо дані з провайдера
+                              return Consumer<DocumentsProvider>(
+                                builder: (context, documentsProvider, child) {
+                                  final documents = documentsProvider.documents;
+                                  return documents.isEmpty
+                                      ? const Center(
+                                          child: CircularProgressIndicator())
+                                      : Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20.0),
+                                          child: DataTable(
+                                            columnSpacing:
+                                                isSmallScreen ? 20 : 31,
+                                            dividerThickness: 2,
+                                            border: TableBorder.all(
+                                              color: theme.colorScheme.primary,
+                                              width: 1,
+                                            ),
+                                            columns: [
+                                              DataColumn(
+                                                label: Center(
+                                                    child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .data,
+                                                        style: theme.textTheme
+                                                            .bodyLarge)),
+                                              ),
+                                              DataColumn(
+                                                  label: Center(
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .fop,
+                                                          style: theme.textTheme
+                                                              .bodyLarge))),
+                                            ],
+                                            rows: documents.map((item) {
+                                              return DataRow(
+                                                color: item.status != true
+                                                    ? WidgetStateProperty.all(
+                                                        Colors.transparent)
+                                                    : WidgetStateProperty.all(
+                                                        theme.cardColor),
+                                                cells: [
+                                                  DataCell(Center(
+                                                      child: Text(item.date,
+                                                          style: theme.textTheme
+                                                              .bodyMedium))),
+                                                  DataCell(Center(
+                                                      child: Text(item.fop,
+                                                          style: theme.textTheme
+                                                              .bodySmall))),
+                                                ],
+                                              );
+                                            }).toList(),
+                                          ),
+                                        );
+                                },
+                              );
+                            }
                           },
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -169,20 +225,16 @@ class _MainPageState extends State<MainPage> {
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 15.0),
                           ),
-                          child: const Text(
-                            'Створити',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                            ),
+                          child: Text(
+                            AppLocalizations.of(context)!.createDocument,
+                            style: theme.textTheme.bodySmall,
                           ),
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'Версія: 1.0.1',
-                        style: TextStyle(
-                            color: Colors.black, fontFamily: 'Futura'),
+                      Text(
+                        AppLocalizations.of(context)!.versionInfo('1.0.0'),
+                        style: theme.textTheme.bodySmall,
                       ),
                     ],
                   ),
