@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:check_point/src/main_page/data/info_model.dart';
+import 'package:check_point/src/main_page/data/async_documents_loader.dart';
 import 'package:go_router/go_router.dart';
 import 'package:check_point/providers/documents_provider.dart';
 import 'package:check_point/common/theme/theme.dart';
@@ -19,6 +17,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final DocumentsModel _documentsModel = DocumentsModel();
   @override
   void initState() {
     super.initState();
@@ -26,16 +25,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<void> _loadData() async {
-    final String response =
-        await rootBundle.loadString('lib/src/main_page/data/test_info.json');
-
-    final List<Map<String, Object?>> dataList = (json.decode(response) as List)
-        .map((item) => item as Map<String, Object?>)
-        .toList();
-
-    List<InfoModel> documents =
-        dataList.map((item) => InfoModel.fromJson(item)).toList();
-
+    final documents = await _documentsModel.fetchDocuments();
     Provider.of<DocumentsProvider>(context, listen: false)
         .setDocuments(documents);
   }
