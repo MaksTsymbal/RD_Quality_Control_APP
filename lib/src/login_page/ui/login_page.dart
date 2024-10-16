@@ -1,3 +1,4 @@
+import 'package:check_point/database/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:check_point/src/login_page/data/login_model.dart';
 import 'package:check_point/providers/login_provider.dart';
@@ -48,13 +49,21 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
   }
 
-  void _login() {
+  void _login() async {
     final String login = _loginController.text;
     final String password = _passwordController.text;
 
     for (var user in _userData) {
       if (user.login == login && user.password == password) {
+        //work with database
+        await DatabaseHelper.instance.insertUser({
+          'name': user.name,
+          'password': user.password,
+          'login': user.login,
+        });
+        //work with provider
         Provider.of<UserProvider>(context, listen: false).updateUser(user);
+
         context.goNamed(
           'main',
           pathParameters: {'name': user.name},
