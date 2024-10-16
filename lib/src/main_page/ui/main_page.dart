@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:check_point/src/main_page/data/info_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:check_point/providers/documents_provider.dart';
+import 'package:check_point/common/theme/theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MainPage extends StatefulWidget {
   /// use provider for state management
@@ -40,8 +42,10 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = AppTheme.themeOf(context);
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 235, 208),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -52,19 +56,13 @@ class _MainPageState extends State<MainPage> {
                   child: CustomScrollView(
                     slivers: [
                       SliverAppBar(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 235, 208),
+                        backgroundColor: theme.scaffoldBackgroundColor,
                         floating: true,
                         pinned: false,
                         flexibleSpace: FlexibleSpaceBar(
                           title: Text(
-                            'Вітаю, ${widget.name}',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Futura',
-                              fontSize: 30,
-                            ),
-                          ),
+                              '${AppLocalizations.of(context)!.hello} ${widget.name}',
+                              style: theme.textTheme.headlineMedium),
                         ),
                         actions: [
                           IconButton(
@@ -75,7 +73,7 @@ class _MainPageState extends State<MainPage> {
                               Icons.person_outline,
                               size: 35,
                             ),
-                            color: Colors.black,
+                            color: theme.colorScheme.primary,
                           ),
                         ],
                       ),
@@ -93,24 +91,26 @@ class _MainPageState extends State<MainPage> {
                                       columnSpacing: isSmallScreen ? 20 : 31,
                                       dividerThickness: 2,
                                       border: TableBorder.all(
-                                        color: Colors.black,
+                                        color: theme.colorScheme.primary,
                                         width: 1,
                                       ),
-                                      columns: const [
+                                      columns: [
+                                        DataColumn(
+                                          label: Center(
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .data,
+                                                  style: theme
+                                                      .textTheme.bodyLarge)),
+                                        ),
                                         DataColumn(
                                             label: Center(
-                                                child: Text('Дата',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontFamily: 'Futura',
-                                                        fontSize: 24)))),
-                                        DataColumn(
-                                            label: Center(
-                                                child: Text('ФОП',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontFamily: 'Futura',
-                                                        fontSize: 24)))),
+                                                child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .fop,
+                                                    style: theme
+                                                        .textTheme.bodyLarge))),
                                       ],
                                       rows: documents.map((item) {
                                         return DataRow(
@@ -118,20 +118,16 @@ class _MainPageState extends State<MainPage> {
                                               ? WidgetStateProperty.all(
                                                   Colors.transparent)
                                               : WidgetStateProperty.all(
-                                                  Colors.orange),
+                                                  theme.cardColor),
                                           cells: [
                                             DataCell(Center(
                                                 child: Text(item.date,
-                                                    style: const TextStyle(
-                                                        color: Colors.black,
-                                                        fontFamily: 'Futura',
-                                                        fontSize: 20)))),
+                                                    style: theme.textTheme
+                                                        .bodyMedium))),
                                             DataCell(Center(
                                                 child: Text(item.fop,
-                                                    style: const TextStyle(
-                                                        color: Colors.black,
-                                                        fontFamily: 'Futura',
-                                                        fontSize: 18)))),
+                                                    style: theme
+                                                        .textTheme.bodySmall))),
                                           ],
                                         );
                                       }).toList(),
@@ -169,20 +165,16 @@ class _MainPageState extends State<MainPage> {
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 15.0),
                           ),
-                          child: const Text(
-                            'Створити',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                            ),
+                          child: Text(
+                            AppLocalizations.of(context)!.createDocument,
+                            style: theme.textTheme.bodySmall,
                           ),
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'Версія: 1.0.1',
-                        style: TextStyle(
-                            color: Colors.black, fontFamily: 'Futura'),
+                      Text(
+                        AppLocalizations.of(context)!.versionInfo('1.0.0'),
+                        style: theme.textTheme.bodySmall,
                       ),
                     ],
                   ),

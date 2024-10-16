@@ -1,0 +1,17 @@
+{
+  "hello": "Hello,",
+  "data": "Data",
+  "fop": "FOP",
+  "createDocument": "Create",
+  "versionInfo": "Version: {version}",
+  "login": "Login",
+  "password": "Password",
+  "authorize": "Log In",
+  "accept": "Accept",
+  "rules": "Rules of collection and processing of personal data",
+  "authorize_error": "Bad login or password",
+  "num_of_documents_today": "Number of documents crated today:",
+  "date_of_start_work": "Date of start work: 20.08.2024",
+  "check_properties": "Check\nNeeded properties",
+  "logout": "Logout"
+}

@@ -4,6 +4,8 @@ import 'package:check_point/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:check_point/common/theme/theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:check_point/providers/language_provider.dart';
 
 class LoginPage extends StatefulWidget {
   /// use provider for state management
@@ -61,13 +63,14 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Невірний логін або пароль')),
+      SnackBar(content: Text(AppLocalizations.of(context)!.authorize_error)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = AppTheme.of(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
     bool isButtonEnabled =
         _loginController.text.isNotEmpty && _passwordController.text.isNotEmpty;
     final screenWidth = MediaQuery.sizeOf(context).width;
@@ -103,7 +106,8 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 40),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: theme.dimensions.visibleContentCount * 10.0,
+                          horizontal:
+                              theme.dimensions.visibleContentCount * 10.0,
                         ),
                         child: TextField(
                           controller: _loginController,
@@ -112,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                               Icons.person_outline,
                               color: Colors.black,
                             ),
-                            hintText: 'Логін',
+                            hintText: AppLocalizations.of(context)!.login,
                             filled: true,
                             fillColor: Colors.orange,
                             border: OutlineInputBorder(
@@ -132,7 +136,8 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 10),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: theme.dimensions.visibleContentCount * 10.0,
+                          horizontal:
+                              theme.dimensions.visibleContentCount * 10.0,
                         ),
                         child: TextField(
                           controller: _passwordController,
@@ -155,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                                 });
                               },
                             ),
-                            hintText: 'Пароль',
+                            hintText: AppLocalizations.of(context)!.password,
                             filled: true,
                             fillColor: Colors.orange,
                             border: OutlineInputBorder(
@@ -186,15 +191,14 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     RichText(
                       textAlign: TextAlign.center,
-                      text: const TextSpan(
-                        text: 'Погоджуюсь з\n',
-                        style: TextStyle(
+                      text: TextSpan(
+                        text: '${AppLocalizations.of(context)!.accept} \n',
+                        style: const TextStyle(
                             color: Colors.black, fontFamily: 'Futura'),
                         children: [
                           TextSpan(
-                            text:
-                                'Правилами збору та обробки персональних даних',
-                            style: TextStyle(
+                            text: AppLocalizations.of(context)!.rules,
+                            style: const TextStyle(
                               color: Colors.black,
                               decoration: TextDecoration.underline,
                             ),
@@ -219,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                         ),
                         child: Text(
-                          'Авторизуватись',
+                          AppLocalizations.of(context)!.authorize,
                           style: TextStyle(
                             fontSize: 18,
                             color: isButtonEnabled
@@ -235,6 +239,37 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
             ],
           ),
+          Positioned(
+            top: 30,
+            right: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Locale newLocale =
+                      languageProvider.locale.languageCode == 'en'
+                          ? const Locale('uk')
+                          : const Locale('en');
+                  languageProvider.setLocale(newLocale);
+                },
+                child: Text(
+                  languageProvider.locale.languageCode,
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

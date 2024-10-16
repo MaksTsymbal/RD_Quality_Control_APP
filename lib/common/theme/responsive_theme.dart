@@ -2,6 +2,9 @@ import 'package:check_point/common/theme/layout_breakpoint.dart';
 import 'package:check_point/common/theme/theme.dart';
 import 'package:check_point/common/theme/theme_data.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:check_point/providers/theme_provider.dart';
+import 'package:check_point/common/theme/app_themes.dart';
 
 class AppResponsiveTheme extends StatelessWidget {
   final AppThemeData Function(LayoutBreakpoint) data;
@@ -15,6 +18,7 @@ class AppResponsiveTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final size = MediaQuery.sizeOf(context);
     final screenWidth = size.width;
     AppThemeData themeData;
@@ -29,6 +33,11 @@ class AppResponsiveTheme extends StatelessWidget {
           ? data(LayoutBreakpoint.xLarge)
           : data(LayoutBreakpoint.large);
     }
-    return AppTheme(data: themeData, child: child);
+    return AppTheme(
+        data: themeData,
+        theme: themeProvider.isDarkMode
+            ? AppThemes.darkTheme
+            : AppThemes.lightTheme,
+        child: child);
   }
 }
