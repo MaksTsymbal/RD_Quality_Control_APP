@@ -60,7 +60,7 @@ class _MainPageState extends State<MainPage> {
                         actions: [
                           IconButton(
                             onPressed: () {
-                              context.pushNamed('user_page');
+                              context.goNamed('user_page');
                             },
                             icon: const Icon(
                               Icons.person_outline,
@@ -208,7 +208,7 @@ class _MainPageState extends State<MainPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            context.pushNamed(
+                            context.goNamed(
                               'create_document',
                               extra: {
                                 'name': widget.name,

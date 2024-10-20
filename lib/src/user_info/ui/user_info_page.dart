@@ -1,3 +1,4 @@
+import 'package:check_point/providers/quality_control_document_provider.dart';
 import 'package:check_point/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class UserPage extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
           onPressed: () {
-            context.pop();
+            context.goNamed('main', pathParameters: {'name': 'user'});
           },
         ),
         title: Column(
@@ -98,7 +99,8 @@ class UserPage extends StatelessWidget {
                                 ),
                                 Divider(color: theme.colorScheme.primary),
                                 Text(
-                                  AppLocalizations.of(context)!.date_of_start_work,
+                                  AppLocalizations.of(context)!
+                                      .date_of_start_work,
                                   style: theme.textTheme.bodyLarge,
                                   textAlign: TextAlign.center,
                                 ),
@@ -150,10 +152,9 @@ class UserPage extends StatelessWidget {
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
-                                            text:
-                                                '${AppLocalizations.of(context)!.num_of_documents_today} ',
-                                            style: theme.textTheme.bodyLarge
-                                          ),
+                                              text:
+                                                  '${AppLocalizations.of(context)!.num_of_documents_today} ',
+                                              style: theme.textTheme.bodyLarge),
                                           TextSpan(
                                             text: '$documentCount',
                                             style: const TextStyle(
@@ -165,7 +166,8 @@ class UserPage extends StatelessWidget {
                                     ),
                                     Divider(color: theme.colorScheme.primary),
                                     Text(
-                                      AppLocalizations.of(context)!.date_of_start_work,
+                                      AppLocalizations.of(context)!
+                                          .date_of_start_work,
                                       style: theme.textTheme.bodyLarge,
                                       textAlign: TextAlign.center,
                                     ),
@@ -260,6 +262,10 @@ class UserPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
                 ),
                 onPressed: () {
+                  final documentprovider = Provider.of<QualityControlDocumentProvider>(
+                      context,
+                      listen: false);
+                  documentprovider.clearAllData();
                   context.goNamed('login');
                 },
                 child: Text(AppLocalizations.of(context)!.logout,

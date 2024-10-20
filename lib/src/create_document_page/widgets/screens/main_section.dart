@@ -1,7 +1,9 @@
+import 'package:check_point/common/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:check_point/src/create_document_page/widgets/custom_dropdown.dart';
 import 'package:check_point/providers/quality_control_document_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MainSection extends StatelessWidget {
   const MainSection({super.key});
@@ -9,6 +11,7 @@ class MainSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<QualityControlDocumentProvider>(context);
+    final theme = AppTheme.themeOf(context);
 
     return Center(
       child: Column(
@@ -16,22 +19,37 @@ class MainSection extends StatelessWidget {
         children: [
           const SizedBox(height: 40),
           CustomDropdown(
-            labelText: 'Склад надходження',
-            items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
+            labelText: AppLocalizations.of(context)!.warehouse,
+            items: [
+              AppLocalizations.of(context)!.position1,
+              AppLocalizations.of(context)!.position2,
+              AppLocalizations.of(context)!.position3
+            ],
+            style: theme.textTheme.bodySmall,
             value: provider.warehouse,
             onChanged: (value) => provider.warehouse = value,
           ),
           const SizedBox(height: 20),
           CustomDropdown(
-            labelText: 'Дата надходження товару',
-            items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
+            labelText: AppLocalizations.of(context)!.date,
+            items: [
+              AppLocalizations.of(context)!.position1,
+              AppLocalizations.of(context)!.position2,
+              AppLocalizations.of(context)!.position3
+            ],
+            style: theme.textTheme.bodySmall,
             value: provider.date,
             onChanged: (value) => provider.date = value,
           ),
           const SizedBox(height: 20),
           CustomDropdown(
-            labelText: 'Постачальник',
-            items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
+            labelText: AppLocalizations.of(context)!.transporter,
+            items: [
+              AppLocalizations.of(context)!.position1,
+              AppLocalizations.of(context)!.position2,
+              AppLocalizations.of(context)!.position3
+            ],
+            style: theme.textTheme.bodySmall,
             value: provider.supplier,
             onChanged: (value) => provider.supplier = value,
           ),
@@ -43,8 +61,8 @@ class MainSection extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Постачальник схвалений',
-                        style: TextStyle(fontSize: 16)),
+                    Text(AppLocalizations.of(context)!.transporter_good,
+                        style: theme.textTheme.bodySmall),
                     Switch(
                       activeTrackColor: Colors.orange,
                       value: provider.supplierApproval,
@@ -56,8 +74,8 @@ class MainSection extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Температура виміряна',
-                        style: TextStyle(fontSize: 16)),
+                    Text(AppLocalizations.of(context)!.temperature,
+                        style: theme.textTheme.bodySmall),
                     Switch(
                       activeTrackColor: Colors.orange,
                       value: provider.temperatureMeasured,
@@ -71,8 +89,13 @@ class MainSection extends StatelessWidget {
           ),
           const SizedBox(height: 40),
           CustomDropdown(
-            labelText: 'Стан транспортного засобу',
-            items: const ['Позиція 1', 'Позиція 2', 'Позиція 3'],
+            labelText: AppLocalizations.of(context)!.auto_quality,
+            items: [
+              AppLocalizations.of(context)!.position1,
+              AppLocalizations.of(context)!.position2,
+              AppLocalizations.of(context)!.position3
+            ],
+            style: theme.textTheme.bodySmall,
             value: provider.vehicleCondition,
             onChanged: (value) => provider.vehicleCondition = value,
           ),

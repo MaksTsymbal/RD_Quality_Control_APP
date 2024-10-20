@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:check_point/common/theme/theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class PhotoSectionQuality extends StatefulWidget {
 
 class _PhotoSectionState extends State<PhotoSectionQuality> {
   final ImagePicker _picker = ImagePicker();
+  Uint8List? _webImageBytes;
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
@@ -22,7 +24,17 @@ class _PhotoSectionState extends State<PhotoSectionQuality> {
     if (pickedFile != null) {
       final provider =
           Provider.of<QualityControlDocumentProvider>(context, listen: false);
-      provider.setPhotoQuality(File(pickedFile.path));
+
+      if (kIsWeb) {
+        // Якщо платформа веб, перетворюємо на байти
+        final webImageBytes = await pickedFile.readAsBytes();
+        setState(() {
+          _webImageBytes = webImageBytes;
+        });
+      } else {
+        // Якщо не веб, використовуємо File для мобільних платформ
+        provider.setPhotoSecurity(File(pickedFile.path));
+      }
     }
   }
 
@@ -44,26 +56,45 @@ class _PhotoSectionState extends State<PhotoSectionQuality> {
               border: Border.all(color: theme.colorScheme.primary),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: photo != null
-                ? Image.file(
-                    photo,
-                    fit: BoxFit.cover,
-                  )
-                : const Icon(
-                    Icons.camera_alt,
-                    size: 100,
-                    color: Colors.black45,
-                  ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(
+                  20),
+              child: kIsWeb
+                  ? (_webImageBytes != null
+                      ? Image.memory(
+                          _webImageBytes!,
+                          fit: BoxFit.cover,
+                        )
+                      : const Icon(
+                          Icons.camera_alt,
+                          size: 100,
+                          color: Colors.black45,
+                        ))
+                  : (photo != null
+                      ? Image.file(
+                          photo,
+                          fit: BoxFit.cover,
+                        )
+                      : const Icon(
+                          Icons.camera_alt,
+                          size: 100,
+                          color: Colors.black45,
+                        )),
+            ),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => _pickImage(ImageSource.gallery),
-            child: Text(AppLocalizations.of(context)!.add_photo_from_gallery, style: theme.textTheme.bodyMedium!.copyWith(color: Colors.black)),
+            child: Text(AppLocalizations.of(context)!.add_photo_from_gallery,
+                style:
+                    theme.textTheme.bodyMedium!.copyWith(color: Colors.black)),
           ),
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () => _pickImage(ImageSource.camera),
-            child: Text(AppLocalizations.of(context)!.make_photo, style: theme.textTheme.bodyMedium!.copyWith(color: Colors.black)),
+            child: Text(AppLocalizations.of(context)!.make_photo,
+                style:
+                    theme.textTheme.bodyMedium!.copyWith(color: Colors.black)),
           ),
         ],
       ),

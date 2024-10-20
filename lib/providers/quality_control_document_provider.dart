@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class QualityControlDocumentProvider extends ChangeNotifier {
@@ -9,6 +11,8 @@ class QualityControlDocumentProvider extends ChangeNotifier {
   bool _temperatureMeasured = false;
   String _name = "";
   List<dynamic> _data = [];
+  File? photo_quality_control;
+  File? photo_security_control;
 
   String? get warehouse => _warehouse;
   String? get date => _date;
@@ -56,6 +60,30 @@ class QualityControlDocumentProvider extends ChangeNotifier {
 
   set data(List<dynamic> value) {
     _data = value;
+    notifyListeners();
+  }
+
+  void setPhotoQuality(File image) {
+    photo_quality_control = image;
+    notifyListeners();
+  }
+
+  void setPhotoSecurity(File image) {
+    photo_security_control = image;
+    notifyListeners();
+  }
+
+  void clearAllData() {
+    _warehouse = null;
+    _date = null;
+    _supplier = null;
+    _vehicleCondition = null;
+    _supplierApproval = false;
+    _temperatureMeasured = false;
+    _name = "";
+    _data = [];
+    photo_quality_control = null;
+    photo_security_control = null;
     notifyListeners();
   }
 }

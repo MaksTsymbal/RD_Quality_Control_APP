@@ -6,12 +6,14 @@ class CustomDropdown extends StatelessWidget {
   final List<String> items;
   final String? value;
   final void Function(String?) onChanged;
+  final TextStyle? style;
 
   const CustomDropdown({
     super.key,
     required this.labelText,
     required this.items,
     required this.onChanged,
+    required this.style,
     this.value,
   });
 
@@ -23,10 +25,7 @@ class CustomDropdown extends StatelessWidget {
         value: value,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-          ),
+          labelStyle: style,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -39,12 +38,9 @@ class CustomDropdown extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        items: _buildMenuItems(),
+        items: _buildMenuItems(context),
         onChanged: onChanged,
-        style: const TextStyle(
-          fontSize: 16,
-          color: Colors.black,
-        ),
+        style: style,
         isExpanded: true,
         buttonStyleData: const ButtonStyleData(
           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -64,13 +60,18 @@ class CustomDropdown extends StatelessWidget {
     );
   }
 
-  List<DropdownMenuItem<String>> _buildMenuItems() {
+  List<DropdownMenuItem<String>> _buildMenuItems(BuildContext context) {
     final List<DropdownMenuItem<String>> menuItems = [];
     for (int i = 0; i < items.length; i++) {
       menuItems.add(
         DropdownMenuItem<String>(
           value: items[i],
-          child: Text(items[i]),
+          child: Text(
+            items[i],
+            style: style!.copyWith(
+              color: value == items[i] ? style!.color : Colors.black,
+            ),
+          ),
         ),
       );
       if (i < items.length - 1) {
