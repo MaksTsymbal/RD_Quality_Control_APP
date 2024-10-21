@@ -48,14 +48,37 @@ class _MainPageState extends State<MainPage> {
                 Expanded(
                   child: CustomScrollView(
                     slivers: [
+                      // SliverAppBar(
+                      //   backgroundColor: theme.scaffoldBackgroundColor,
+                      //   floating: true,
+                      //   pinned: false,
+                      //   centerTitle: true,
+                      //   flexibleSpace: FlexibleSpaceBar(
+                      //     title: Text(
+                      //         '${AppLocalizations.of(context)!.hello} ${widget.name}',
+                      //         style: theme.textTheme.headlineMedium),
+                      //   ),
+                      //   actions: [
+                      //     IconButton(
+                      //       onPressed: () {
+                      //         context.goNamed('user_page');
+                      //       },
+                      //       icon: const Icon(
+                      //         Icons.person_outline,
+                      //         size: 35,
+                      //       ),
+                      //       color: theme.colorScheme.primary,
+                      //     ),
+                      //   ],
+                      // ),
                       SliverAppBar(
                         backgroundColor: theme.scaffoldBackgroundColor,
                         floating: true,
                         pinned: false,
-                        flexibleSpace: FlexibleSpaceBar(
-                          title: Text(
-                              '${AppLocalizations.of(context)!.hello} ${widget.name}',
-                              style: theme.textTheme.headlineMedium),
+                        centerTitle: true,
+                        title: Text(
+                          '${AppLocalizations.of(context)!.hello} ${widget.name}',
+                          style: theme.textTheme.headlineMedium,
                         ),
                         actions: [
                           IconButton(
@@ -70,6 +93,7 @@ class _MainPageState extends State<MainPage> {
                           ),
                         ],
                       ),
+
                       SliverToBoxAdapter(
                         child: FutureBuilder<List<InfoModel>>(
                           future: _documentsModel.fetchAndConvertDocuments(),

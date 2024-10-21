@@ -19,23 +19,53 @@ class _PhotoSectionState extends State<PhotoSectionSecurity> {
   Uint8List? _webImageBytes;
 
   Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await _picker.pickImage(source: source);
+    try {
+      final pickedFile = await _picker.pickImage(source: source);
 
-    if (pickedFile != null) {
-      final provider =
-          Provider.of<QualityControlDocumentProvider>(context, listen: false);
+      if (pickedFile != null) {
+        final provider =
+            Provider.of<QualityControlDocumentProvider>(context, listen: false);
 
-      if (kIsWeb) {
-        // Якщо платформа веб, перетворюємо на байти
-        final webImageBytes = await pickedFile.readAsBytes();
-        setState(() {
-          _webImageBytes = webImageBytes;
-        });
-      } else {
-        // Якщо не веб, використовуємо File для мобільних платформ
-        provider.setPhotoSecurity(File(pickedFile.path));
+        if (kIsWeb) {
+          final webImageBytes = await pickedFile.readAsBytes();
+          setState(() {
+            _webImageBytes = webImageBytes;
+          });
+        } else {
+          provider.setPhotoSecurity(File(pickedFile.path));
+        }
       }
+    } catch (e) {
+      _showErrorDialog(context,
+          'Помилка отримання файлу. Спробуйте це зробити не на симуляторі');
     }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Помилка',
+            style: TextStyle(color: Colors.black),
+          ),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -56,27 +86,30 @@ class _PhotoSectionState extends State<PhotoSectionSecurity> {
               border: Border.all(color: theme.colorScheme.primary),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: kIsWeb
-                ? (_webImageBytes != null
-                    ? Image.memory(
-                        _webImageBytes!,
-                        fit: BoxFit.cover,
-                      )
-                    : const Icon(
-                        Icons.camera_alt,
-                        size: 100,
-                        color: Colors.black45,
-                      ))
-                : (photo != null
-                    ? Image.file(
-                        photo,
-                        fit: BoxFit.cover,
-                      )
-                    : const Icon(
-                        Icons.camera_alt,
-                        size: 100,
-                        color: Colors.black45,
-                      )),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: kIsWeb
+                  ? (_webImageBytes != null
+                      ? Image.memory(
+                          _webImageBytes!,
+                          fit: BoxFit.cover,
+                        )
+                      : const Icon(
+                          Icons.camera_alt,
+                          size: 100,
+                          color: Colors.black45,
+                        ))
+                  : (photo != null
+                      ? Image.file(
+                          photo,
+                          fit: BoxFit.cover,
+                        )
+                      : const Icon(
+                          Icons.camera_alt,
+                          size: 100,
+                          color: Colors.black45,
+                        )),
+            ),
           ),
           const SizedBox(height: 20),
           ElevatedButton(

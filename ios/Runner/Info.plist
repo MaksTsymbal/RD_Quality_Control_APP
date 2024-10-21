@@ -16,6 +16,10 @@
 	<string>check_point</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Цей додаток потребує доступу до вашої галереї для вибору фотографій.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Цей додаток потребує доступу до вашої камери для зйомки фотографій.</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

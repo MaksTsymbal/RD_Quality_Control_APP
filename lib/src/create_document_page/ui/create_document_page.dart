@@ -47,6 +47,7 @@ class _CreateQualityControllResultPageState
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: theme.scaffoldBackgroundColor,
         title: Text(
           AppLocalizations.of(context)!.appbar_text,
